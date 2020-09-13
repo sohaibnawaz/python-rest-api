@@ -62,14 +62,13 @@ class Video(Resource):
         if not result:
             abort(404, message="Video does not exist cannot update.")
 
-        if "name" in args:
+        if args['name']
             result.name = args['name']
-        if "views" in args:
+        if args['views']:
             result.views = args['views']
-        if "likes" in args:
+        if args['likes']:
             result.likes = args['likes']
 
-        db.session.add(result)
         db.session.commit()
 
         return result
