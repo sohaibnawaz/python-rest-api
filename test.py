@@ -17,5 +17,5 @@ response = requests.get(BASE + "video/6")
 print(response.json())
 
 input()
-response = requests.patch(BASE + "video/2", {"views":99})
+response = requests.patch(BASE + "video/2", {"views":50})
 print(response.json())
