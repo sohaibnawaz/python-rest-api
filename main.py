@@ -17,6 +17,7 @@ def abort_nonexistent_video_id(video_id):
 
 class Video(Resource):
     def get(self, video_id):
+        abort_nonexistent_video_id(video_id)
         return videos[video_id]
 
     def put(self, video_id):
