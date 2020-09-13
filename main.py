@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_restful import Api, Resource, reqparse
+from flask_restful import Api, Resource, reqparse, abort
 
 app = Flask(__name__)
 api = Api(app)
@@ -10,6 +10,10 @@ video_put_args.add_argument("views", type=int, help="Views of the video is a req
 video_put_args.add_argument("likes", type=int, help="Likes on the video is a required field (Type: Int)", required=True)
 
 videos = {}
+
+def abort_nonexistent_video_id(video_id):
+    if video_id not in videos:
+        abort("Video id is not valid...")
 
 class Video(Resource):
     def get(self, video_id):
