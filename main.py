@@ -56,13 +56,13 @@ class Video(Resource):
         return video, 201
 
     @marshal_with(resource_fields)
-    def patch(self):
+    def patch(self, video_id):
         args = video_update_args.parse_args()
         result = VideoModel.query.filter_by(id=video_id).first()
         if not result:
             abort(404, message="Video does not exist cannot update.")
 
-        if args['name']
+        if args['name']:
             result.name = args['name']
         if args['views']:
             result.views = args['views']
