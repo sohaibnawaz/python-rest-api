@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_restful import Api, Resource, reqparse, abort
+from flask_restful import Api, Resource, reqparse, abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -17,27 +17,25 @@ class VideoModel(db.Model):
         return f"Video(name = {name}, views = {views}, likes = {likes})"
 
 # db.create_all only needs to be run on the first run of the application.
-db.create_all()
+# db.create_all()
 
 video_put_args = reqparse.RequestParser()
 video_put_args.add_argument("name", type=str, help="Name of the video is a required field (Type: String)", required=True)
 video_put_args.add_argument("views", type=int, help="Views of the video is a required field (Type: Int)", required=True)
 video_put_args.add_argument("likes", type=int, help="Likes on the video is a required field (Type: Int)", required=True)
 
-videos = {}
-
-def abort_nonexistent_video_id(video_id):
-    if video_id not in videos:
-        abort(404, message="Video id is not valid...")
-
-def abort_if_video_exists(video_id):
-    if video_id in videos:
-        abort(409, message="A video with this ID already exists...")
+resource_fields = {
+    'id': fields.Integer,
+    'name': fields.String,
+    'views': fields.Integer,
+    'likes': fields.Integer,
+}
 
 class Video(Resource):
+    @marshal_with(resource_fields)
     def get(self, video_id):
-        abort_nonexistent_video_id(video_id)
-        return videos[video_id]
+        result = VideoModel.query.get(id=video_id)
+        return v
 
     def put(self, video_id):
         abort_if_video_exists(video_id)
