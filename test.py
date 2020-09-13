@@ -14,7 +14,7 @@ for i in range(len(data)):
 
 
 input()
-reponse = requests.delete(BASE + "video/0")
+response = requests.delete(BASE + "video/0")
 print(response)
 input()
 response = requests.get(BASE + "video/2")
