@@ -24,6 +24,11 @@ video_put_args.add_argument("name", type=str, help="Name of the video is a requi
 video_put_args.add_argument("views", type=int, help="Views of the video is a required field (Type: Int)", required=True)
 video_put_args.add_argument("likes", type=int, help="Likes on the video is a required field (Type: Int)", required=True)
 
+video_update_args = reqparse.RequestParser()
+video_update_args.add_argument("name", type=str, help="Name of the video is a required field (Type: String)")
+video_update_args.add_argument("views", type=int, help="Views of the video is a required field (Type: Int)")
+video_update_args.add_argument("likes", type=int, help="Likes on the video is a required field (Type: Int)")
+
 resource_fields = {
     'id': fields.Integer,
     'name': fields.String,
@@ -49,6 +54,25 @@ class Video(Resource):
         db.session.add(video)
         db.session.commit()
         return video, 201
+
+    @marshal_with(resource_fields)
+    def patch(self):
+        args = video_put_args.parse_args()
+        result = VideoModel.query.filter_by(id=video_id).first()
+        if not result:
+            abort(404, message="Video does not exist cannot update.")
+
+        if "name" in args:
+            result.name = args['name']
+        if "views" in args:
+            result.views = args['views']
+        if "likes" in args:
+            result.likes = args['likes']
+
+        db.session.add(result)
+        db.session.commit()
+
+        return result
 
     def delete(self, video_id):
         abort_nonexistent_video_id(video_id)
